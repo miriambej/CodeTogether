@@ -1,5 +1,6 @@
 var express = require('express');
 var router = express.Router();
+
 var nodemailer = require ('nodemailer');
 var config = require('../config');
 var transporter = nodemailer.createTransport(config.mailer); //we are going to pass the config.mailer to the createTransport. The config mailer comes from config.js folder.
@@ -21,9 +22,9 @@ router.route('/contact')
   })
   // when you click submit, it runs the post request and renders thank page.
   .post(function(req, res, next) {
-    req.checkBody('name', 'Empty name').notEmpty();
-    req.checkBody('email', 'Invalid email').isEmail();
-    req.checkBody('message', 'Empty message').notEmpty();
+    req.checkBody('name', 'Empty Name').notEmpty();
+    req.checkBody('email', 'Invalid Email').isEmail();
+    req.checkBody('message', 'Empty Message').notEmpty();
     var errors = req.validationErrors();
 
     if(errors) {
@@ -49,14 +50,6 @@ router.route('/contact')
         res.render('thank', { title: 'CodeTogether - a platform for sharing code.'});
       });
     }
-  });
-
-  router.get('/login', function(req, res, next) {
-    res.render('login', {title: 'Login your account'});
-  });
-
-  router.get('/register', function(req, res, next) {
-    res.render('register', {title: 'Register a new account'});
   });
 
 module.exports = router;
