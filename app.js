@@ -36,14 +36,22 @@ app.use(cookieParser());
 app.use(session({
   secret: config.sessionKey,
   resave: false,
-  saveUninitialized: true,
-  cookie: {secure: true}
+  saveUninitialized: true
 }));
 
 app.use(passport.initialize());
 app.use(passport.session());
 
 app.use(express.static(path.join(__dirname, 'public')));
+
+app.use(function(req, res, next) {
+  // if the user is authenticated, it creates a session res.locals.user and we pass the req.user into that one. So from now accross all application, res.locals.user can be used to access to the current user.
+  if(req.isAuthenticated()) {
+    res.locals.user = req.user;
+  }
+  //next means, once it finish the above moved to the next ones. i.e app.use('/', indexRoute), app.use('/', authRoute), etc.
+  next();
+})
 
 app.use('/', indexRoute);
 app.use('/', authRoute);
