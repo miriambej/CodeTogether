@@ -1,5 +1,8 @@
 var express = require('express');
 var router = express.Router();
+var nodemailer = require ('nodemailer');
+var config = require('../config');
+var transporter = nodemailer.createTransport(config.mailer); //we are going to pass the config.mailer to the createTransport. The config mailer comes from config.js folder.
 
 /* GET home page. */
 // req = request, res = respond
@@ -32,7 +35,19 @@ router.route('/contact')
         errorMessages: errors
       });
     } else {
-      res.render('thank', { title: 'CodeTogether - a platform for sharing code.'});
+      var mailOptions = {
+        from: 'CodeTogether <no-reply@CodeTogether.com',
+        to: 'heroku.miriam23@gmail.com',
+        subject: 'You got a new message from visitor 🦋 😽',
+        text: req.body.message
+      };
+
+      transporter.sendMail(mailOptions, function(error, info) {
+        if (error) {
+          return console.log(error);
+        }
+        res.render('thank', { title: 'CodeTogether - a platform for sharing code.'});
+      });
     }
   });
 
