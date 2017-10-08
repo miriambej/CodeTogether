@@ -12,7 +12,8 @@ var userSchema = new mongoose.Schema({
     required: true
   },
   hash: String,
-  salt: String
+  salt: String,
+  facebookId: String
 });
 
 //this function is to set a new password, once a user is created in the database
