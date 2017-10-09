@@ -8,3 +8,26 @@ body {
   padding: 15px;
   margin: 0 auto;
 }
+
+.btn {
+  color: #fff;
+  border-radius: 5px;
+  font-weight: bold;
+  padding: 9px 27px;
+  margin-top: 20px;
+}
+
+.btn:hover, .btn:focus{
+  color: #fff;
+}
+
+.btn.btn-facebook {
+  border: 1px solid #3B5998;
+  background-color: #3B5998;
+}
+
+.btn.btn-facebook:active {
+  outline: none;
+  border-color: #2d467b;
+  background-color: #2d467b;
+}
