@@ -10,11 +10,6 @@ body {
 }
 
 .btn {
-  color: #fff;
-  border-radius: 5px;
-  font-weight: bold;
-  padding: 9px 27px;
-  margin-top: 20px;
 }
 
 .btn:hover, .btn:focus{
@@ -24,6 +19,11 @@ body {
 .btn.btn-facebook {
   border: 1px solid #3B5998;
   background-color: #3B5998;
+  color: #fff;
+  border-radius: 5px;
+  font-weight: bold;
+  padding: 9px 27px;
+  margin-top: 20px;
 }
 
 .btn.btn-facebook:active {

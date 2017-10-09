@@ -4,16 +4,65 @@
       <textarea id="code-screen"></textarea>
     </div>
     <div class="col-md-4" id="chatbox">
-      <!-- CHAT BOX HERE -->
+      <div class="panel panel-primary">
+        <div class="panel-heading">
+          CHAT ROOM
+          <span class="pull-right" id="chatbox-username">
+            {{#if user}}
+              {{user.name}}
+            {{/if}}
+          </span>
+        </div>
+        <div class="panel-body">
+          <ul class="media-list" style="heigh: 300px; overflow-y: scroll" id="chatbox-listMessages">
+
+          </ul>
+        </div>
+        <div class="panel-footer">
+          <div class="input-group">
+            <input type="text" class="form-control" placeholder="Enter message" id="userMessage"/>
+            <span class="input-group-btn">
+              <button type="button" class="btn btn-primary" onclick="sendMessage()">SEND</button>
+            </span>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>
-
 <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.30.0/codemirror.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.30.0/mode/javascript/javascript.min.js"></script>
+<script src="/socket.io/socket.io.js"></script>
 <script>
+  var socket = io.connect('http://localhost:3000');
   var editor = CodeMirror.fromTextArea(document.getElementById("code-screen"), {
     lineNumbers: true,
     theme: "monokai"
   });
+
+  // get username from chatbox-username, if it doesnt have any values(means user is not login and they are as guests), then create a random number for user id with Math.random
+  var username = $('#chatbox-username').val();
+  if (username === "") {
+    var userId = Math.floor(Math.random() * 9999).toString();
+    username = "User" + userId;
+    $("#chatbox-username").text(username); //show that as username in chatbox-username
+  }
+
+  // once there is a name and text, it just creates the username along with the content in the message box.
+  var userMessage = function(name, text) {
+    return ('<li class="media"> <div class="media-body"> <div class="media">' + '<div class="media-body"/>' + '<b>' + name + '</b> : ' + text + '<hr/></div></div></div></li>');
+  };
+
+  // creates the userMessage by adding the message and username to the chatMessage socket, after that the userMessage gets empty.
+  var sendMessage = function() {
+    var userMessage = $('#userMessage').val();
+    socket.emit('chatMessage', {message: userMessage, username: username});
+    $('#userMessage').val("");
+  };
+
+  // open socket for chatMessage and the chatbox-listMessages is going to append a mew message everytime someone type a message in.
+  socket.on('chatMessage', function(data) {
+    $('#chatbox-listMessages').append(userMessage(data.username, data.message));
+  });
+
 </script>
