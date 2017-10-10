@@ -33,12 +33,31 @@
 <input type="hidden" value="{{roomId}}" id="roomId">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.30.0/codemirror.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.30.0/mode/javascript/javascript.min.js"></script>
+<script src="/plugins/ot/ot.js"></script>
 <script src="/socket.io/socket.io.js"></script>
 <script>
+
+  var EditorClient = ot.EditorClient;
+  var SocketIOAdapter = ot.SocketIOAdapter;
+  var CodeMirrorAdapter = ot.CodeMirrorAdapter;
+
   var socket = io.connect('http://localhost:3000');
   var editor = CodeMirror.fromTextArea(document.getElementById("code-screen"), {
     lineNumbers: true,
     theme: "monokai"
+  });
+
+  var cmClient;
+  //create new init function and passed the function to the socket.
+  function init(str, revision, clients, serverAdapter) {
+    editor.setValue(str);
+    cmClient = window.cmClient = new EditorClient(
+      revision, clients, serverAdapter, new CodeMirrorAdapter(editor) //got editor from var editor above.
+    );
+  };
+  //doc is another chanel that opens and it Initialize the string 'This is a Markdown heading.. from socket-server.
+  socket.on('doc', function(obj) {
+    init(obj.str, obj.revision, obj.clients, new SocketIOAdapter(socket));
   });
 
   // get username from chatbox-username, if it doesnt have any values(means user is not login and they are as guests), then create a random number for user id with Math.random
@@ -50,7 +69,7 @@
   }
   //go to element #roomId which comes from <input type="hidden" value="{{roomId}}" id="roomId"> and .val return the value value="{{roomId}}" to get the roomId
   var roomId = $('#roomId').val();
-  socket.emit('joinRoom', {room: roomId});
+  socket.emit('joinRoom', {room: roomId, username: username});
 
   // once there is a name and text, it just creates the username along with the content in the message box.
   var userMessage = function(name, text) {
