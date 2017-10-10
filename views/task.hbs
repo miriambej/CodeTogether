@@ -30,6 +30,7 @@
     </div>
   </div>
 </div>
+<input type="hidden" value="{{roomId}}" id="roomId">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.30.0/codemirror.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.30.0/mode/javascript/javascript.min.js"></script>
 <script src="/socket.io/socket.io.js"></script>
@@ -47,6 +48,9 @@
     username = "User" + userId;
     $("#chatbox-username").text(username); //show that as username in chatbox-username
   }
+  //go to element #roomId which comes from <input type="hidden" value="{{roomId}}" id="roomId"> and .val return the value value="{{roomId}}" to get the roomId
+  var roomId = $('#roomId').val();
+  socket.emit('joinRoom', {room: roomId});
 
   // once there is a name and text, it just creates the username along with the content in the message box.
   var userMessage = function(name, text) {
