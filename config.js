@@ -8,6 +8,6 @@ module.exports = {
       pass: ''
     }
   },
-  dbConnstring: 'mongodb://127.0.0.1:27017/codeshare',
+  dbConnstring: 'mongodb://admin:123@ds113775.mlab.com:13775/codetogether',
   sessionKey:'HolaCodeTogether'
 }
