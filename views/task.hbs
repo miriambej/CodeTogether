@@ -54,6 +54,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.30.0/mode/javascript/javascript.min.js"></script>
 <script src="/plugins/ot/ot.js"></script>
 <script src="/socket.io/socket.io.js"></script>
+<script src="http://cdn.peerjs.com/0.3/peer.js"></script>
 <script>
 
   var EditorClient = ot.EditorClient;
@@ -106,5 +107,73 @@
   socket.on('chatMessage', function(data) {
     $('#chatbox-listMessages').append(userMessage(data.username, data.message));
   });
+
+  //PeerJS
+  // Compatibility shim - this is what displays the camera
+    navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
+    // PeerJS object - here is where it creates a new peer and passes the username and roomId to the peer.
+    var peer = new Peer(username + roomId, {key: ''});
+    peer.on('open', function(){
+      $('#my-id').text(peer.id);
+    });
+
+    // Receiving a call and opens the connection, and also call for the error if something happens.
+    peer.on('call', function(call){
+      // Answer the call automatically (instead of prompting user) for demo purposes
+      call.answer(window.localStream);
+      step3(call);
+    });
+    peer.on('error', function(err){
+      alert(err.message);
+      // Return to step 2 if error occurs
+      step2();
+    });
+
+    // Click handlers setup
+    $(function(){
+      $('#make-call').click(function(){
+        // Initiate a call!
+        var call = peer.call($('#callto-id').val(), window.localStream);
+        step3(call);
+      });
+      $('#end-call').click(function(){
+        window.existingCall.close();
+        step2();
+      });
+      // Get things started
+      step1();
+    });
+
+    function step1 () {
+      // Get audio/video stream
+      navigator.getUserMedia({audio: true, video: true}, function(stream){
+        // Set your video displays and it will turn on step2
+        $('#my-video').prop('src', URL.createObjectURL(stream));
+        window.localStream = stream;
+        step2();
+      }, function(){ $('#step1-error').show(); });
+    }
+
+    function step2 () {
+      $('#step3').hide();
+      $('#step2').show();
+    }
+
+    function step3 (call) {
+      // Hang up on an existing call if present
+      if (window.existingCall) {
+        window.existingCall.close();
+      }
+      // Wait for stream on the call, then set peer video display
+      call.on('stream', function(stream){
+        $('#second-video').prop('src', URL.createObjectURL(stream));
+      });
+      // UI stuff
+      window.existingCall = call;
+      $('#second-id').text(call.peer);
+      call.on('close', step2);
+      $('#step2').hide();
+      $('#step3').show();
+    }
 
 </script>
