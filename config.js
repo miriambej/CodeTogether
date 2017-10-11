@@ -1,4 +1,3 @@
-require('dotenv').config();
 'use strict'
 
 module.exports = {
@@ -6,7 +5,7 @@ module.exports = {
     service: 'Gmail',
     auth: {
       user: 'heroku.miriam23@gmail.com',
-      pass: process.env.GM_1
+      pass: process.env['GM_1']
     }
   },
   dbConnstring: 'mongodb://admin:123@ds113775.mlab.com:13775/codetogether',
