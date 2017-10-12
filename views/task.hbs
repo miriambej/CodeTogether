@@ -93,8 +93,23 @@
 
   // once there is a name and text, it just creates the username along with the content in the message box.
   var userMessage = function(name, text) {
+
+    // create the li and insert div
+      // content of the div is .text
+
+    // work out where this is being called, make sure it is just inserting  text not html
+
+    // make sure text variable doesn't contain '<script' -> /<script/ -- case insensitive etc
+      // if it does, return ''
+
     return ('<li class="media"> <div class="media-body"> <div class="media">' + '<div class="media-body"/>' + '<b>' + name + '</b> : ' + text + '<hr/></div></div></div></li>');
   };
+
+
+  window.onkeypress = function( e ){
+    if (e.key === "Enter")
+      sendMessage()
+    };
 
   // creates the userMessage by adding the message and username to the chatMessage socket, after that the userMessage gets empty.
   var sendMessage = function() {
