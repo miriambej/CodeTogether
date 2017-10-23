@@ -79,7 +79,8 @@
   socket.on('doc', function(obj) {
     init(obj.str, obj.revision, obj.clients, new SocketIOAdapter(socket));
   });
-
+///////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////
   // get username from chatbox-username, if it doesnt have any values(means user is not login and they are as guests), then create a random number for user id with Math.random
   var username = $('#chatbox-username').val();
   if (username === "") {
@@ -123,6 +124,7 @@
     $('#chatbox-listMessages').append(userMessage(data.username, data.message));
   });
 
+  ////////////////////////////////////////////////////////
   //PeerJS
   // Compatibility shim - this is what displays the camera
     navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
