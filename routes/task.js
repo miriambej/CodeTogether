@@ -24,7 +24,7 @@ router.get('/task/:id', function(req, res) {
       }
       if (data) {
         // the data is the data of the task, and the data.id means we pass the task.id
-        res.render('task', {data: data, roomId: data.id});
+        res.render('task', {content: data.content, roomId: data.id});
       }else {
         res.render('error');
       }

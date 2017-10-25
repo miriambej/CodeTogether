@@ -16,7 +16,12 @@ module.exports = function(server) {
       if (!roomList[data.room]) {
         // if everything is good, run.
         var socketIOServer = new ot.EditorSocketIOServer(str, [], data.room, function(socket, cb) {
-          cb(true);
+          var self = this;
+          Task.findByIdAndUpdate(data.room, {content: self.document}, function(err) {
+            if (err) return cb(false);
+            cb(true);
+          });
+
         });
         roomList[data.room] = socketIOServer;
       }
